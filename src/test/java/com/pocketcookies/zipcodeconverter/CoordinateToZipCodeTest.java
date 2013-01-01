@@ -1,6 +1,7 @@
 package com.pocketcookies.zipcodeconverter;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.vividsolutions.jts.geom.Coordinate;
 import junit.framework.TestCase;
@@ -17,5 +18,9 @@ public class CoordinateToZipCodeTest extends TestCase {
                 CoordinateToZipCode.getZipCodes(
                 ImmutableList.of(new Coordinate(-77.06720, 39.00404)))
                 .entrySet()).getValue());
+    }
+    
+    public void testMissingZipCode() throws Exception {
+        assertEquals(ImmutableMap.of(), CoordinateToZipCode.getZipCodes(ImmutableList.of(new Coordinate(37.71859, -39.023437))));
     }
 }
