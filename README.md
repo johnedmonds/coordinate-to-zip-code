@@ -1,6 +1,6 @@
 # Introduction
 
-This project provides an API to convert coordinates to U.S. zip codes. The data for zip codes boundaries comes from The United States Census Bureau (http://www.census.gov/geo/www/cob/z52000.html).
+This project provides an API to convert coordinates (longitude, latitude) to U.S. zip codes. The data for zip codes boundaries comes from The United States Census Bureau (http://www.census.gov/geo/www/cob/z52000.html).
 
 # Usage
 
