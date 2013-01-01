@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.pocketcookies</groupId>
-    <artifactId>zipcodeconverter</artifactId>
+    <artifactId>coordinate-to-zip-code</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
-    <name>zipcodeconverter</name>
+    <name>coordinate-to-zip-code</name>
     <url>http://maven.apache.org</url>
 
     <properties>
