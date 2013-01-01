@@ -14,10 +14,11 @@ import org.geotools.data.simple.SimpleFeatureIterator;
 import org.opengis.feature.simple.SimpleFeature;
 
 /**
- * Hello world!
+ * Class for converting {@link Coordinate}s to zip codes.
  *
+ * @author john.a.edmonds@gmail.com (John "Jack" Edmonds)
  */
-public class App {
+public class CoordinateToZipCode {
 
     private static String getShapefileName(String id) {
         return "zt" + id + "_d00.shp";
@@ -30,7 +31,7 @@ public class App {
 
     static {
         try {
-            shapefiles.load(App.class.getResourceAsStream("/zipcodes/shapefiles.txt"));
+            shapefiles.load(CoordinateToZipCode.class.getResourceAsStream("/zipcodes/shapefiles.txt"));
         } catch (IOException ex) {
             throw new ExceptionInInitializerError("Failed to load the list of shapefiles.");
         }
@@ -54,7 +55,7 @@ public class App {
         final ImmutableMap.Builder<Coordinate, String> zipCodes = ImmutableMap.builder();
         for (Entry<Object, Object> shapefileEntry : shapefiles.entrySet()) {
             ShapefileDataStore shapefile = new ShapefileDataStore(
-                    App.class.getResource(
+                    CoordinateToZipCode.class.getResource(
                     getShapefilePath((String) shapefileEntry.getValue())));
             for (Coordinate coordinate : coordinates) {
                 // Check the bounds of this entire shapefile to see if we can
