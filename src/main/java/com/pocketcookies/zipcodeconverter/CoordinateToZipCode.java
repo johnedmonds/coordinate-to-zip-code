@@ -1,7 +1,6 @@
 package com.pocketcookies.zipcodeconverter;
 
 import com.google.common.collect.ImmutableMap;
-import com.sun.istack.internal.Nullable;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiPolygon;
