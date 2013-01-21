@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 import javax.annotation.Nullable;
 import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.data.simple.SimpleFeatureIterator;
@@ -50,7 +51,7 @@ public class CoordinateToZipCode {
      * should be packaged in the jar.
      */
     @Nullable
-    public static Map<Coordinate, String> getZipCodes(Iterable<Coordinate> coordinates)
+    public static Map<Coordinate, String> getZipCodes(Set<Coordinate> coordinates)
             throws IOException {
         final ImmutableMap.Builder<Coordinate, String> zipCodes = ImmutableMap.builder();
         for (Entry<Object, Object> shapefileEntry : shapefiles.entrySet()) {
