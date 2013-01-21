@@ -65,5 +65,11 @@
             <version>2.1</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>net.sourceforge.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>1.3.7</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 </project>
