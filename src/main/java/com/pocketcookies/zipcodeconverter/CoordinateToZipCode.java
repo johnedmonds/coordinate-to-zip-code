@@ -60,6 +60,9 @@ public class CoordinateToZipCode {
 
     /**
      * Figures out which zip codes contain the given {@link Coordinates}.
+     * 
+     * Note, if speed is a concern, it's best to batch together as many
+     * coordinates as possible and make only one call to this function.
      *
      * @param coordinates The coordinates for which to find containing zip
      * codes.
