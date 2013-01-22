@@ -1,6 +1,8 @@
 package com.pocketcookies.zipcodeconverter;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiPolygon;
@@ -12,6 +14,7 @@ import java.util.Set;
 import javax.annotation.Nullable;
 import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.data.simple.SimpleFeatureIterator;
+import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.opengis.feature.simple.SimpleFeature;
 
 /**
@@ -27,6 +30,23 @@ public class CoordinateToZipCode {
 
     private static String getShapefilePath(String id) {
         return "/zipcodes/" + getShapefileName(id);
+    }
+
+    /**
+     * Checks the bounds of this entire Shapefile to see if we can skip it.
+     */
+    private static class ShapefileFilter implements Predicate<Coordinate> {
+
+        private final ReferencedEnvelope referencedEnvelope;
+
+        ShapefileFilter(ReferencedEnvelope referencedEnvelope) {
+            this.referencedEnvelope = referencedEnvelope;
+        }
+
+        @Override
+        public boolean apply(Coordinate coordinate) {
+            return referencedEnvelope.contains(coordinate);
+        }
     }
     private static final Properties shapefiles = new Properties();
 
@@ -58,27 +78,26 @@ public class CoordinateToZipCode {
             ShapefileDataStore shapefile = new ShapefileDataStore(
                     CoordinateToZipCode.class.getResource(
                     getShapefilePath((String) shapefileEntry.getValue())));
-            for (Coordinate coordinate : coordinates) {
-                // Check the bounds of this entire shapefile to see if we can
-                // skip it.
-                if (shapefile.getFeatureSource().getBounds()
-                        .contains(coordinate)) {
-                    SimpleFeatureIterator featureIterator = shapefile
-                            .getFeatureSource()
-                            .getFeatures()
-                            .features();
-                    while (featureIterator.hasNext()) {
-                        SimpleFeature feature = featureIterator.next();
-                        if (((MultiPolygon) feature.getDefaultGeometry())
-                                .contains(
-                                new GeometryFactory()
-                                .createPoint(coordinate))) {
-                            zipCodes.put(coordinate, (String) feature.getAttribute("NAME"));
-                            break;
-                        }
+            final Iterable<Coordinate> coordinatesInShapefile = Iterables.filter(coordinates, new ShapefileFilter(shapefile.getFeatureSource().getBounds()));
+            // See if we can skip this shapefile.
+            if (Iterables.isEmpty(coordinatesInShapefile)) {
+                continue;
+            }
+            SimpleFeatureIterator featureIterator = shapefile
+                    .getFeatureSource()
+                    .getFeatures()
+                    .features();
+            while (featureIterator.hasNext()) {
+                SimpleFeature feature = featureIterator.next();
+                for (Coordinate coordinate : coordinatesInShapefile) {
+                    if (((MultiPolygon) feature.getDefaultGeometry())
+                            .contains(new GeometryFactory()
+                            .createPoint(coordinate))) {
+                        zipCodes.put(coordinate, (String) feature.getAttribute("NAME"));
                     }
                 }
             }
+            featureIterator.close();
         }
         return zipCodes.build();
     }
